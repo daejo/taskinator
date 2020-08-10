@@ -63,6 +63,7 @@ var createTaskEl = function(taskDataObj) { //Creates Tasks
     listItemEl.className = "task-item"; //Says what style the created task will have.
 
     listItemEl.setAttribute("data-task-id", taskIdCounter); //adds task id as a custom attribute
+    listItemEl.setAttribute("draggable", "true");
 
     var taskInfoEl = document.createElement("div"); //creates div to hold task info and add to list item.
     taskInfoEl.className = "task-info"; //gives it a class name.
@@ -141,6 +142,56 @@ var taskStatusChangeHandler = function(event) {
     }
 };
 
+var dragTaskHandler = function(event) { //Drag function
+    var taskId = event.target.getAttribute("data-task-id");
+    event.dataTransfer.setData("text/plain", taskId);
+
+    var getId = event.dataTransfer.getData("text/plain");
+    console.log("getId:", getId, typeof getId);
+};
+
+var dragLeaveHandler = function(event) { //Removes all dragging styles after dragging and dropping
+    var taskListEl = event.target.closest(".task-list");
+    if (taskListEl) {
+        taskListEl.removeAttribute("style");
+    }
+}
+
+
+var dropZoneDragHandler = function(event) { //Dropzone function
+    var taskListEl = event.target.closest(".task-list");
+    if (taskListEl) {
+        event.preventDefault();
+        
+        taskListEl.setAttribute("style", "background: rgba(68, 233, 255, 0.7); border-style: dashed;");
+    }
+};
+
+var dropTaskHandler = function(event) { //Drop task function
+    var id = event.dataTransfer.getData("text/plain");   
+    var draggableElement = document.querySelector("[data-task-id='" + id + "']");
+    var dropZoneEl = event.target.closest(".task-list");
+    var statusType = dropZoneEl.id;
+    var statusSelectEl = draggableElement.querySelector("select[name='status-change']");
+    if (statusType === "tasks-to-do") {
+        statusSelectEl.slectedIndex = 0;
+    }
+    else if (statusSelectEl === "tasks-in-progress") {
+        statusSelectEl.selectedIndex = 1;
+    }
+    else if (statusSelectEl === "tasks-completed") {
+        statusSelectEl.selectedIndex = 2;
+    }
+    
+    dropZoneEl.removeAttribute("style"); //removes cutout lines after dragging
+    dropZoneEl.appendChild(draggableElement);
+};
+
+
+pageContentEl.addEventListener("dragleave", dragLeaveHandler);
+pageContentEl.addEventListener("drop", dropTaskHandler); //Links drop action.
+pageContentEl.addEventListener("dragover", dropZoneDragHandler); //Links dragging action.
+pageContentEl.addEventListener("dragstart", dragTaskHandler); //Links dragging action.
 pageContentEl.addEventListener("change", taskStatusChangeHandler); //Links changes to taskStatusChangeHandler.
 pageContentEl.addEventListener("click", taskButtonHandler); //Links button to taskButtonHandler.
 formEl.addEventListener("submit", taskFormHandler); //Links button click to taskFormHandler.
