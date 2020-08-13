@@ -248,16 +248,47 @@ var saveTasks = function() { //Converts "tasks" information into strings.
 };
 
 var loadTasks = function() {
-    var savedTask = localStorage.getItem("tasks");
+    var tasks = localStorage.getItem("tasks");
 
-    
-    if (!savedTask) { //If "savedTask" = null
+    if (!tasks) { //If "tasks" = null
         return false;
     };
 
-    tasks = JSON.parse(tasks);
-    console.log()
+    for (var i = 0; i < tasks.length; i++) {
+        tasks[i].id = i;
+        
+        var listItemEl = document.createElement("li"); //Creates the element for <li>.
+        listItemEl.className = "task-item"; //Says what style the created task will have.
+        listItemEl.setAttribute("data-task-id", taskIdCounter); //adds task id as a custom attribute
+        listItemEl.setAttribute("draggable", "true");
     
+        var taskInfoEl = document.createElement("div"); //creates div to hold task info and add to list item.
+        taskInfoEl.className = "task-info"; //gives it a class name.
+        taskInfoEl.innerHTML = "<h3 class='task-name'>" + tasks[i].name + "</h3><span class='task-type'>" + tasks[i].type + "</span>";
+    
+        listItemEl.appendChild(taskInfoEl);
+    
+        var taskActionsEl = createTaskActions(tasks[i].id); { 
+        listItemEl.appendChild(taskActionsEl);
+    
+            if (tasks[i].status = "to do") {
+                listItemEl.querySelector("select[name='status-change']").selectedIndex = "0";
+                listItemEl.appendChild(tasksToDoEl);
+                taskIdCounter++;            
+            }else if (tasks[i].status = "in progress") {
+                listItemEl.querySelector("select[name='status-change']").selectedIndex = "1";
+                listItemEl.appendChild(tasksInProgressEl);
+                taskIdCounter++;
+            }else if (tasks[i].status = "complete") {
+                listItemEl.querySelector("select[name='status-change']").selectedIndex = "2";
+                listItemEl.appendChild(tasksCompletedEl);
+                taskIdCounter++;
+            }
+        }   
+        console.log(listItemEl)
+
+    };
+    tasks = JSON.parse(tasks);
 };
 
 loadTasks();
