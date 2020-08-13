@@ -268,23 +268,23 @@ var loadTasks = function() {
     
         listItemEl.appendChild(taskInfoEl);
     
-        var taskActionsEl = createTaskActions(tasks[i].id); { 
+        var taskActionsEl = createTaskActions(tasks[i].id);
         listItemEl.appendChild(taskActionsEl);
     
-            if (tasks[i].status = "to do") {
+            if (tasks[i].status == "to do") {
                 listItemEl.querySelector("select[name='status-change']").selectedIndex = "0";
                 listItemEl.appendChild(tasksToDoEl);
                 taskIdCounter++;            
-            }else if (tasks[i].status = "in progress") {
+            }else if (tasks[i].status == "in progress") {
                 listItemEl.querySelector("select[name='status-change']").selectedIndex = "1";
                 listItemEl.appendChild(tasksInProgressEl);
                 taskIdCounter++;
-            }else if (tasks[i].status = "complete") {
+            }else if (tasks[i].status == "complete") {
                 listItemEl.querySelector("select[name='status-change']").selectedIndex = "2";
                 listItemEl.appendChild(tasksCompletedEl);
                 taskIdCounter++;
             }
-        }   
+          
         console.log(listItemEl)
 
     };
